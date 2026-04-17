@@ -1,0 +1,31 @@
+{
+  "name": "solana-sniper-bot",
+  "version": "0.1.0",
+  "description": "Solana token launch sniper bot - Raydium pool detector + Jupiter swapper",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "dev:watch": "nodemon --exec ts-node src/index.ts --ext ts"
+  },
+  "dependencies": {
+    "@jup-ag/api": "^6.0.0",
+    "@raydium-io/raydium-sdk-v2": "2.0.1-rc.0",
+    "@solana/web3.js": "^1.95.5",
+    "axios": "^1.7.9",
+    "bs58": "^6.0.0",
+    "dotenv": "^16.4.7",
+    "socket.io": "^4.8.3",
+    "winston": "^3.17.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/bs58": "^4.0.4",
+    "@types/node": "^22.10.7",
+    "@types/ws": "^8.5.13",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
+}

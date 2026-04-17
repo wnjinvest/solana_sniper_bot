@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p /opt/claude/stb/src)",
+      "Bash(mkdir -p /opt/claude/stb/logs)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(wc -l /opt/claude/stb/src/*.ts)"
+    ]
+  }
+}

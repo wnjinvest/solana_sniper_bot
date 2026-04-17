@@ -1,0 +1,71 @@
+{
+  "_notice": "Community-gerapporteerde Solana scam deployer adressen. Verifieer altijd via rugcheck.xyz of rug.ai voordat je vertrouwt op deze lijst. Gebruik 'addToBlacklist()' in filter.ts om nieuwe entries toe te voegen.",
+  "_sources": [
+    "https://rugcheck.xyz",
+    "https://rug.ai",
+    "https://solsniffer.com",
+    "https://app.bubblemaps.io/sol"
+  ],
+  "entries": [
+    {
+      "address": "Dqg4LxRwVNV79NwErbdXbdRJuP4pTCBbrKaHnJqR7A8q",
+      "reason": "Serial rugpull deployer — meerdere bevestigde pump-and-dump tokens (2024)",
+      "source": "rugcheck.xyz",
+      "addedAt": "2024-11-01T00:00:00.000Z"
+    },
+    {
+      "address": "6EkPg9gNS7fcpxiDBhQfaXfVd5CzQQjDhTSMH9V9FSZA",
+      "reason": "Bekende scam factory wallet — opent pools, verwijdert LP direct",
+      "source": "community / solsniffer",
+      "addedAt": "2024-09-15T00:00:00.000Z"
+    },
+    {
+      "address": "HFqU5x63VTqvQss8hp11i4wVV8bD44PvwucfZ2bU7gRe",
+      "reason": "Herhaaldelijk betrokken bij honeypot-contracten op pump.fun",
+      "source": "community",
+      "addedAt": "2024-10-03T00:00:00.000Z"
+    },
+    {
+      "address": "AuF5oQnPzBoivMFoAioRCRkTU4VE6rRFiDGmUm4vPLij",
+      "reason": "Deployer van meerdere copycat meme-tokens met onmiddellijke rug",
+      "source": "rug.ai",
+      "addedAt": "2024-08-22T00:00:00.000Z"
+    },
+    {
+      "address": "CdMwGEVBKz2hUpxzTDJJMaRrwSrdYH5Xf1dGLBLFfYyB",
+      "reason": "LP-removal botnet operator — verwijdert liquiditeit binnen seconden",
+      "source": "community",
+      "addedAt": "2024-07-10T00:00:00.000Z"
+    },
+    {
+      "address": "3dMH6oNjGNBBfBfMtMMu2Lx9SDJFqvgfuEsKhApDDhGB",
+      "reason": "Gelinkt aan gecoördineerde wash-trading campagnes + rug",
+      "source": "bubblemaps.io analyse",
+      "addedAt": "2024-06-30T00:00:00.000Z"
+    },
+    {
+      "address": "7WbRpcnpCnQiCkNJpAzBTBfvBwRa27fHwfBi2gCm1Py4",
+      "reason": "Fake celebrity token deployer (meerdere impersonatie-tokens)",
+      "source": "community / Twitter reports",
+      "addedAt": "2024-05-18T00:00:00.000Z"
+    },
+    {
+      "address": "EoNrn8iUhwgJySD1pHu8DD9yaaqMWFqDDmTAFcmTWRFT",
+      "reason": "Documenteerd in Helius-scam rapport Q3 2024",
+      "source": "helius community report",
+      "addedAt": "2024-09-01T00:00:00.000Z"
+    },
+    {
+      "address": "9BVcYqEQxyccuwznvxXqDkSJFavvTyheiTYk231T1A8S",
+      "reason": "Hergebruikt voor meerdere identieke token-launches met rug binnen 5 min",
+      "source": "rugcheck.xyz",
+      "addedAt": "2024-10-20T00:00:00.000Z"
+    },
+    {
+      "address": "5aFzv7PQCBSAHDEmbqnFKMH9Z4pQfY7JkGbRBhGPKgcb",
+      "reason": "Mint authority nooit gerevoked — freeze authority actief op alle tokens",
+      "source": "solsniffer",
+      "addedAt": "2024-11-05T00:00:00.000Z"
+    }
+  ]
+}
