@@ -153,8 +153,7 @@ export class PositionMonitor {
   private async fetchPriceSol(mint: string): Promise<number | null> {
     const MAX_RETRIES    = 3;
     const RETRY_DELAY_MS = 1_000;
-    const WSOL = 'So11111111111111111111111111111111111111112';
-    const url  = `https://lite-api.jup.ag/price/v2?ids=${mint}&vsToken=${WSOL}`;
+    const url  = `https://lite-api.jup.ag/price/v2?ids=${mint}&vsToken=${WSOL_MINT}`;
 
     for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
       try {
