@@ -10,6 +10,7 @@
 
 import { config, reloadConfig } from './config';
 import { logger }           from './logger';
+import { WSOL_MINT }        from './constants';
 import { RaydiumListener }  from './listener';
 import { PoolFilter }       from './filter';
 import { WalletManager }    from './wallet';
