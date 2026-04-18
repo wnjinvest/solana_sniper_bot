@@ -215,7 +215,7 @@ describe('PoolFilter — 7 filterlagen', () => {
       const result = await filter.evaluate(makePool({
         detectedAt: Date.now() - 5_000,
       }));
-      expect(result.reason).not.toMatch(/te laat/i);
+      expect(result.reason ?? '').not.toMatch(/te laat/i);
     });
   });
 
