@@ -36,6 +36,9 @@ const JUPITER_TIMEOUT_MS = 4_000;
 const JUPITER_QUOTE_RETRIES = 3;
 const JUPITER_QUOTE_RETRY_DELAY_MS = 600;
 
+// Maximale tijd voor de volledige honeypot-check (beide quotes samen)
+const HONEYPOT_CHECK_TIMEOUT_MS = 5_000;
+
 const BLACKLIST_PATH = path.resolve(__dirname, 'blacklist.json');
 
 // ── Types ─────────────────────────────────────────────────────────────────────
