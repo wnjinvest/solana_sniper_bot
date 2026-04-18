@@ -146,29 +146,44 @@ export class PositionMonitor {
   }
 
   /**
-   * Haal de huidige prijs op via Jupiter's price API v2.
-   * Geeft de prijs in SOL per token terug.
+   * Haal de huidige prijs op via Jupiter's price API v2, met retry-logica.
+   * Geeft de prijs in SOL per token terug, of null na alle pogingen.
    */
   private async fetchPriceSol(mint: string): Promise<number | null> {
-    try {
-      const WSOL = 'So11111111111111111111111111111111111111112';
-      const url  = `https://lite-api.jup.ag/price/v2?ids=${mint}&vsToken=${WSOL}`;
-      const res  = await fetch(url, { signal: AbortSignal.timeout(5_000) });
+    const MAX_RETRIES    = 3;
+    const RETRY_DELAY_MS = 1_000;
+    const WSOL = 'So11111111111111111111111111111111111111112';
+    const url  = `https://lite-api.jup.ag/price/v2?ids=${mint}&vsToken=${WSOL}`;
 
-      if (!res.ok) return null;
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        const res = await fetch(url, { signal: AbortSignal.timeout(5_000) });
 
-      const json = await res.json() as {
-        data?: Record<string, { price?: string }>;
-      };
+        if (!res.ok) {
+          if (attempt < MAX_RETRIES) { await sleep(RETRY_DELAY_MS); continue; }
+          break;
+        }
 
-      const priceStr = json.data?.[mint]?.price;
-      if (!priceStr) return null;
+        const json = await res.json() as {
+          data?: Record<string, { price?: string }>;
+        };
 
-      const price = parseFloat(priceStr);
-      return isFinite(price) && price > 0 ? price : null;
+        const priceStr = json.data?.[mint]?.price;
+        if (!priceStr) return null;
 
-    } catch {
-      return null;
+        const price = parseFloat(priceStr);
+        return isFinite(price) && price > 0 ? price : null;
+
+      } catch {
+        if (attempt < MAX_RETRIES) await sleep(RETRY_DELAY_MS);
+      }
     }
+
+    logger.warn(`[Monitor] Prijs niet beschikbaar voor ${mint.slice(0, 8)}... na ${MAX_RETRIES} pogingen — TP/SL check overgeslagen`);
+    return null;
   }
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
