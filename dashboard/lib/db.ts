@@ -58,7 +58,7 @@ const insertStmt = db.prepare<Omit<DbTrade, 'id' | 'dryRun'> & { dryRun: 0 | 1 }
      @entryPriceSol, @pnlPercent, @pnlSol, @durationMs, @dryRun)
 `);
 
-const selectStmt = db.prepare<[number], DbTrade & { dryRun: 0 | 1 }>(
+const selectStmt = db.prepare<[number], Omit<DbTrade, 'dryRun'> & { dryRun: 0 | 1 }>(
   'SELECT * FROM trades ORDER BY closeTimestamp DESC LIMIT ?'
 );
 
