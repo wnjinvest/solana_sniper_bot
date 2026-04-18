@@ -43,6 +43,44 @@ const CONFIG_GROUPS = [
   },
 ];
 
+// ── Validatieregels per config-key ───────────────────────────────────────────
+
+interface ValidationRule {
+  min?:     number;
+  max?:     number;
+  pattern?: RegExp;
+  message:  string;
+}
+
+const VALIDATION_RULES: Record<string, ValidationRule> = {
+  BUY_AMOUNT_SOL:              { min: 0.001, max: 100,        message: 'Moet tussen 0,001 en 100 SOL zijn' },
+  SLIPPAGE_BPS:                { min: 1,     max: 10_000,     message: 'Moet tussen 1 en 10.000 bps zijn' },
+  PRIORITY_FEE_MICRO_LAMPORTS: { min: 0,     max: 10_000_000, message: 'Moet ≥ 0 zijn' },
+  TAKE_PROFIT_PERCENT:         { min: 1,     max: 10_000,     message: 'Moet tussen 1% en 10.000% zijn' },
+  STOP_LOSS_PERCENT:           { min: 1,     max: 100,        message: 'Moet tussen 1% en 100% zijn' },
+  MONITOR_INTERVAL_MS:         { min: 1_000, max: 60_000,     message: 'Moet tussen 1.000 en 60.000 ms zijn' },
+  MIN_LIQUIDITY_SOL:           { min: 0.1,   max: 10_000,     message: 'Moet ≥ 0,1 SOL zijn' },
+  MAX_TOKEN_AGE_MS:            { min: 1_000, max: 3_600_000,  message: 'Moet tussen 1.000 en 3.600.000 ms zijn' },
+  MIN_DEPLOYER_TX_COUNT:       { min: 0,     max: 1_000,      message: 'Moet tussen 0 en 1.000 zijn' },
+  HONEYPOT_MAX_LOSS_PCT:       { min: 1,     max: 100,        message: 'Moet tussen 1% en 100% zijn' },
+  HONEYPOT_CHECK_ENABLED:      { pattern: /^(true|false)$/,   message: 'Moet "true" of "false" zijn' },
+};
+
+function validateField(key: string, value: string): string | null {
+  const rule = VALIDATION_RULES[key];
+  if (!rule) return null;
+
+  if (rule.pattern) {
+    return rule.pattern.test(value.trim()) ? null : rule.message;
+  }
+
+  const num = parseFloat(value);
+  if (isNaN(num)) return 'Moet een getal zijn';
+  if (rule.min !== undefined && num < rule.min) return rule.message;
+  if (rule.max !== undefined && num > rule.max) return rule.message;
+  return null;
+}
+
 type SaveState = 'idle' | 'saving' | 'ok' | 'error';
 
 export default function SettingsPage() {
