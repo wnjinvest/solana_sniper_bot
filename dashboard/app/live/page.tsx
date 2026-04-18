@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   Play, Square, Wallet, Radar, Filter,
-  ShoppingCart, Zap, AlertTriangle, TrendingUp,
+  ShoppingCart, Zap, AlertTriangle, TrendingUp, WifiOff,
 } from 'lucide-react';
 import { StatusBadge } from '@/components/dashboard/status-badge';
 import { LogFeed } from '@/components/dashboard/log-feed';
