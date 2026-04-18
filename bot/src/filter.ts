@@ -240,9 +240,12 @@ export class PoolFilter {
       return { passed: true };
 
     } catch (err) {
-      // Bij RPC-fout: voorzichtigheidshalve goedkeuren (vermijd false positives door netwerk-hickups)
-      logger.warn(`[Filter] Deployer-check mislukt voor ${deployer.slice(0, 8)}...: ${err}`);
-      return { passed: true };
+      // Fail closed: onbekende deployer bij RPC-fout = niet kopen
+      logger.warn(`[Filter] Deployer-check RPC-fout voor ${deployer.slice(0, 8)}...: ${err} — pool afgewezen`);
+      return {
+        passed: false,
+        reason: `SKIP: deployer-check RPC-fout — afgewezen voor veiligheid`,
+      };
     }
   }
 
