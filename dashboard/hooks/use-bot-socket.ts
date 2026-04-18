@@ -23,9 +23,11 @@ import type {
   ClosedTrade,
   FilterCategory,
 } from '@/lib/types';
+import type { DbTrade } from '@/lib/db';
 
 const MAX_LOGS        = 100;
 const MAX_POOL_EVENTS = 200;
+const PRICE_POLL_MS   = 10_000;
 
 export interface BotState {
   // Verbinding
@@ -100,21 +102,108 @@ const initialState: BotState = {
   creditStats:   null,
 };
 
+function dbTradeToClosedTrade(t: DbTrade): ClosedTrade {
+  return {
+    tokenMint:       t.tokenMint,
+    entryTimestamp:  t.entryTimestamp,
+    inputSol:        t.inputSol,
+    outputTokens:    t.outputTokens,
+    currentPriceSol: null,
+    entryPriceSol:   t.entryPriceSol,
+    pnlPercent:      t.pnlPercent,
+    dryRun:          t.dryRun,
+    closeTimestamp:  t.closeTimestamp,
+    closeReason:     t.closeReason,
+    pnlSol:          t.pnlSol,
+    durationMs:      t.durationMs,
+  };
+}
+
+function persistTrade(trade: ClosedTrade): void {
+  fetch('/api/trades', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      tokenMint:      trade.tokenMint,
+      entryTimestamp: trade.entryTimestamp,
+      closeTimestamp: trade.closeTimestamp,
+      closeReason:    trade.closeReason,
+      inputSol:       trade.inputSol,
+      outputTokens:   trade.outputTokens,
+      entryPriceSol:  trade.entryPriceSol,
+      pnlPercent:     trade.pnlPercent,
+      pnlSol:         trade.pnlSol,
+      durationMs:     trade.durationMs,
+      dryRun:         trade.dryRun,
+    } satisfies Omit<DbTrade, 'id'>),
+  }).catch(() => {});
+}
+
 export function useBotSocket(): BotState & BotActions {
   const [state, setState] = useState<BotState>(initialState);
   const socketRef         = useRef(getSocket());
+  const activeTradesRef   = useRef<ActiveTrade[]>([]);
 
+  // Houd ref synchroon met state zodat de polling altijd vers data heeft
+  activeTradesRef.current = state.activeTrades;
+
+  // ── Historische trades laden bij opstart ──────────────────────────────────
+  useEffect(() => {
+    fetch('/api/trades')
+      .then((r) => r.json())
+      .then((trades: DbTrade[]) => {
+        setState((prev) => ({
+          ...prev,
+          closedTrades: trades.map(dbTradeToClosedTrade),
+        }));
+      })
+      .catch(() => {});
+  }, []);
+
+  // ── Live prijspolling voor actieve trades ─────────────────────────────────
+  useEffect(() => {
+    const poll = async () => {
+      const trades = activeTradesRef.current;
+      if (trades.length === 0) return;
+
+      const mints = trades.map((t) => t.tokenMint).join(',');
+      try {
+        const res = await fetch(`/api/price?mints=${encodeURIComponent(mints)}`);
+        if (!res.ok) return;
+
+        const json = await res.json() as { data?: Record<string, { price?: string }> };
+        if (!json.data) return;
+
+        setState((prev) => ({
+          ...prev,
+          activeTrades: prev.activeTrades.map((trade) => {
+            const priceStr = json.data?.[trade.tokenMint]?.price;
+            if (!priceStr) return trade;
+            const currentPriceSol = parseFloat(priceStr);
+            if (!isFinite(currentPriceSol) || currentPriceSol <= 0) return trade;
+            const pnlPercent = trade.entryPriceSol > 0
+              ? ((currentPriceSol - trade.entryPriceSol) / trade.entryPriceSol) * 100
+              : null;
+            return { ...trade, currentPriceSol, pnlPercent };
+          }),
+        }));
+      } catch { /* netwerk niet beschikbaar — volgende poll */ }
+    };
+
+    const timer = setInterval(poll, PRICE_POLL_MS);
+    return () => clearInterval(timer);
+  }, []);
+
+  // ── Socket event handlers ─────────────────────────────────────────────────
   useEffect(() => {
     const s = socketRef.current;
 
-    // ── Verbindingsstatus ─────────────────────────────────────────────────────
     const onConnect = () =>
       setState((prev) => ({ ...prev, connected: true }));
 
     const onDisconnect = () =>
       setState((prev) => ({ ...prev, connected: false, botStatus: 'stopped' }));
 
-    // ── Bot status ────────────────────────────────────────────────────────────
     const onBotStatus = (data: BotStatusEvent) =>
       setState((prev) => ({
         ...prev,
@@ -131,18 +220,15 @@ export function useBotSocket(): BotState & BotActions {
         },
       }));
 
-    // ── Balance ───────────────────────────────────────────────────────────────
     const onBalanceUpdate = (data: BalanceUpdateEvent) =>
       setState((prev) => ({ ...prev, balanceSol: data.balanceSol }));
 
-    // ── Log feed ──────────────────────────────────────────────────────────────
     const onBotLog = (data: BotLogEvent) =>
       setState((prev) => ({
         ...prev,
         logs: [data, ...prev.logs].slice(0, MAX_LOGS),
       }));
 
-    // ── Pool detected ─────────────────────────────────────────────────────────
     const onPoolDetected = (data: PoolDetectedEvent) =>
       setState((prev) => ({
         ...prev,
@@ -150,7 +236,6 @@ export function useBotSocket(): BotState & BotActions {
         stats: { ...prev.stats, parsedOk: prev.stats.parsedOk + 1 },
       }));
 
-    // ── Pool filtered ─────────────────────────────────────────────────────────
     const onPoolFiltered = (data: PoolFilteredEvent) =>
       setState((prev) => ({
         ...prev,
@@ -162,16 +247,18 @@ export function useBotSocket(): BotState & BotActions {
         stats: { ...prev.stats, poolsFiltered: prev.stats.poolsFiltered + 1 },
       }));
 
-    // ── Trade executed ────────────────────────────────────────────────────────
     const onTradeExecuted = (data: TradeExecutedEvent) =>
       setState((prev) => {
+        // Deduplicatie: negeer als mint al actief is
+        if (prev.activeTrades.some((t) => t.tokenMint === data.tokenMint)) return prev;
+
         const trade: ActiveTrade = {
           tokenMint:       data.tokenMint,
           entryTimestamp:  data.timestamp,
           inputSol:        data.inputSol,
           outputTokens:    data.outputTokens,
           currentPriceSol: null,
-          entryPriceSol:   data.inputSol / Number(data.outputTokens || 1),
+          entryPriceSol:   data.inputSol / Math.max(Number(data.outputTokens || 1), 1),
           pnlPercent:      null,
           dryRun:          data.dryRun,
         };
@@ -182,12 +269,9 @@ export function useBotSocket(): BotState & BotActions {
         };
       });
 
-    // ── Trade closed ──────────────────────────────────────────────────────────
     const onTradeClosed = (data: TradeClosedEvent) =>
       setState((prev) => {
-        const active = prev.activeTrades.find(
-          (t) => t.tokenMint === data.tokenMint
-        );
+        const active = prev.activeTrades.find((t) => t.tokenMint === data.tokenMint);
         if (!active) return prev;
 
         const closed: ClosedTrade = {
@@ -199,26 +283,22 @@ export function useBotSocket(): BotState & BotActions {
           durationMs:     data.durationMs,
         };
 
+        persistTrade(closed);
+
         return {
           ...prev,
-          activeTrades: prev.activeTrades.filter(
-            (t) => t.tokenMint !== data.tokenMint
-          ),
+          activeTrades: prev.activeTrades.filter((t) => t.tokenMint !== data.tokenMint),
           closedTrades: [closed, ...prev.closedTrades],
           stats: { ...prev.stats, tradesClosed: prev.stats.tradesClosed + 1 },
         };
       });
 
-    // ── Credit stats ──────────────────────────────────────────────────────────
     const onCreditStats = (data: CreditStatsEvent) =>
       setState((prev) => ({ ...prev, creditStats: data }));
 
-    // ── Dry run status ────────────────────────────────────────────────────────
-    // Bot stuurt dit meteen bij verbinding en bij elke wijziging
     const onDryRunStatus = (data: DryRunStatusEvent) =>
       setState((prev) => ({ ...prev, dryRun: data.dryRun }));
 
-    // Registreer listeners
     s.on('connect',        onConnect);
     s.on('disconnect',     onDisconnect);
     s.on('bot_status',     onBotStatus);
@@ -228,10 +308,9 @@ export function useBotSocket(): BotState & BotActions {
     s.on('pool_filtered',  onPoolFiltered);
     s.on('trade_executed', onTradeExecuted);
     s.on('trade_closed',   onTradeClosed);
-    s.on('credit_stats',    onCreditStats);
-    s.on('dry_run_status',  onDryRunStatus);
+    s.on('credit_stats',   onCreditStats);
+    s.on('dry_run_status', onDryRunStatus);
 
-    // Request huidige status bij verbinding
     if (s.connected) {
       setState((prev) => ({ ...prev, connected: true }));
       s.emit('request_status');
@@ -247,8 +326,8 @@ export function useBotSocket(): BotState & BotActions {
       s.off('pool_filtered',  onPoolFiltered);
       s.off('trade_executed', onTradeExecuted);
       s.off('trade_closed',   onTradeClosed);
-      s.off('credit_stats',    onCreditStats);
-      s.off('dry_run_status',  onDryRunStatus);
+      s.off('credit_stats',   onCreditStats);
+      s.off('dry_run_status', onDryRunStatus);
     };
   }, []);
 
