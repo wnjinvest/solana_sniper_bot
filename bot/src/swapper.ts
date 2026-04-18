@@ -299,18 +299,18 @@ export class Swapper {
     logger.info(`[Swapper] Verstuurd: ${signature} (${Date.now() - t.send}ms)`);
 
     // ── 6. Wachten op confirmatie ─────────────────────────────────────────────
-    const controller = new AbortController();
-    const timeout    = setTimeout(() => controller.abort(), CONFIRM_TIMEOUT_MS);
-
-    let confirmation;
-    try {
-      confirmation = await this.connection.confirmTransaction(
+    const confirmation = await Promise.race([
+      this.connection.confirmTransaction(
         { signature, blockhash, lastValidBlockHeight },
         'confirmed'
-      );
-    } finally {
-      clearTimeout(timeout);
-    }
+      ),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error(`Confirmatie timeout na ${CONFIRM_TIMEOUT_MS}ms | sig: ${signature}`)),
+          CONFIRM_TIMEOUT_MS
+        )
+      ),
+    ]);
 
     if (confirmation.value.err) {
       // On-chain failure — returen met signature zodat caller NIET retryt
