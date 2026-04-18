@@ -1,6 +1,13 @@
 import winston from 'winston';
 import path from 'path';
+import fs from 'fs';
 import { config } from './config';
+
+// Zorg dat de logs-map bestaat vóór Winston de file-transports aanmaakt
+const logsDir = path.resolve(process.cwd(), 'logs');
+if (!fs.existsSync(logsDir)) {
+  fs.mkdirSync(logsDir, { recursive: true });
+}
 
 const { combine, timestamp, printf, colorize, errors } = winston.format;
 
