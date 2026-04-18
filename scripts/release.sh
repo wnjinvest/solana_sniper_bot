@@ -16,6 +16,9 @@ VERSION=$(node -p "require('./bot/package.json').version")
 
 echo "Releasen als v${VERSION}..."
 
+# Socket-types synchroniseren
+bash scripts/sync-types.sh
+
 # Changelog genereren
 node scripts/update-changelog.js "$VERSION"
 
