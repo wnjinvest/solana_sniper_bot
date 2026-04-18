@@ -22,9 +22,12 @@
   },
   "devDependencies": {
     "@types/bs58": "^4.0.4",
+    "@types/jest": "^30.0.0",
     "@types/node": "^22.10.7",
     "@types/ws": "^8.5.13",
+    "jest": "^30.3.0",
     "nodemon": "^3.1.9",
+    "ts-jest": "^29.4.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   }
