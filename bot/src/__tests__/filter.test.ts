@@ -259,7 +259,7 @@ describe('PoolFilter — 7 filterlagen', () => {
       mockDeployerOk(10);
       mockJupiterSuccess();
       const result = await filter.evaluate(makePool());
-      expect(result.reason).not.toMatch(/deployer slechts/i);
+      expect(result.reason ?? '').not.toMatch(/deployer slechts/i);
     });
 
     it('weigert pool bij RPC-fout — fail closed (Sprint 2 fix)', async () => {
