@@ -270,13 +270,23 @@ export class RaydiumListener {
       return; // ongeldig JSON — negeren
     }
 
-    // Abonnements-bevestiging
-    if (msg.id === 1 && typeof msg.result === 'number') {
-      this.subscriptionId = msg.result as number;
-      logger.info(
-        `[Listener] Abonnement actief (sub-id: ${this.subscriptionId}) ` +
-        `— luistert naar programma ${this.programId}`
-      );
+    // Abonnements-bevestiging of fout van de server
+    if (msg.id === 1) {
+      if (msg.error) {
+        logger.error(`[Listener] Abonnement geweigerd: ${JSON.stringify(msg.error)} — herverbinden...`);
+        this.ws?.close(); // onClose plant herverbinding in
+        return;
+      }
+      if (typeof msg.result === 'number') {
+        this.subscriptionId = msg.result as number;
+        logger.info(
+          `[Listener] Abonnement actief (sub-id: ${this.subscriptionId}) ` +
+          `— luistert naar programma ${this.programId}`
+        );
+      } else {
+        logger.error(`[Listener] Onverwacht abonnements-resultaat: ${JSON.stringify(msg.result)} — herverbinden...`);
+        this.ws?.close();
+      }
       return;
     }
 
