@@ -34,6 +34,7 @@ jest.mock('../logger', () => ({
   logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn() },
 }));
 
+// Literale strings — jest.mock() wordt gehoist boven const-declaraties
 const BLACKLISTED_DEPLOYER = 'BlacklistedDeployer11111111111111111111111';
 const BLACKLISTED_TOKEN    = 'BlacklistedToken111111111111111111111111111';
 
@@ -42,8 +43,8 @@ jest.mock('fs', () => ({
     _notice:  'test',
     _sources: [],
     entries: [
-      { address: BLACKLISTED_DEPLOYER, reason: 'known scammer', source: 'test', addedAt: '2024-01-01' },
-      { address: BLACKLISTED_TOKEN,    reason: 'rug pull',      source: 'test', addedAt: '2024-01-01' },
+      { address: 'BlacklistedDeployer11111111111111111111111', reason: 'known scammer', source: 'test', addedAt: '2024-01-01' },
+      { address: 'BlacklistedToken111111111111111111111111111', reason: 'rug pull',      source: 'test', addedAt: '2024-01-01' },
     ],
   })),
   writeFileSync: jest.fn(),
