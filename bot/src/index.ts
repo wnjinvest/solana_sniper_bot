@@ -116,6 +116,7 @@ async function main(): Promise<void> {
     // update_config callback
     (key, value) => {
       process.env[key] = value;
+      reloadConfig();
       logger.info(`[Main] Config bijgewerkt: ${key}=${value}`);
     }
   );
