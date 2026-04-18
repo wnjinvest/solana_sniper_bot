@@ -9,7 +9,7 @@ import { NextResponse } from 'next/server';
 import fs   from 'fs';
 import path from 'path';
 
-const ENV_PATH = path.resolve('/opt/claude/stb/.env');
+const ENV_PATH = path.resolve('/opt/claude/solana-sniper-bot/bot/.env');
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
