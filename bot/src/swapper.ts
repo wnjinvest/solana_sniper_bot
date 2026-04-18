@@ -371,16 +371,18 @@ export class Swapper {
     });
     logger.info(`[Swapper] Verkoop verstuurd: ${signature} (${Date.now() - t.send}ms)`);
 
-    const timeout = setTimeout(() => {}, CONFIRM_TIMEOUT_MS);
-    let confirmation;
-    try {
-      confirmation = await this.connection.confirmTransaction(
+    const confirmation = await Promise.race([
+      this.connection.confirmTransaction(
         { signature, blockhash, lastValidBlockHeight },
         'confirmed'
-      );
-    } finally {
-      clearTimeout(timeout);
-    }
+      ),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error(`Verkoop confirmatie timeout na ${CONFIRM_TIMEOUT_MS}ms | sig: ${signature}`)),
+          CONFIRM_TIMEOUT_MS
+        )
+      ),
+    ]);
 
     if (confirmation.value.err) {
       return {
