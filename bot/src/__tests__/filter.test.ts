@@ -137,7 +137,7 @@ describe('PoolFilter — 7 filterlagen', () => {
       mockDeployerOk();
       mockJupiterSuccess();
       const result = await filter.evaluate(makePool());
-      expect(result.reason).not.toMatch(/blacklist/i);
+      expect(result.reason ?? '').not.toMatch(/blacklist/i);
     });
   });
 
