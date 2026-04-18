@@ -119,6 +119,14 @@ export default function SettingsPage() {
 
   // ── Sla één veld op ─────────────────────────────────────────────────────────
   const saveField = useCallback(async (key: string) => {
+    // Valideer vóór opslaan
+    const validationError = validateField(key, values[key] ?? '');
+    if (validationError) {
+      setSaveErrors((prev) => ({ ...prev, [key]: validationError }));
+      setSaveState((prev) => ({ ...prev, [key]: 'error' }));
+      return;
+    }
+
     setSaveState((prev) => ({ ...prev, [key]: 'saving' }));
     setSaveErrors((prev) => ({ ...prev, [key]: '' }));
 
