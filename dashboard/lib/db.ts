@@ -49,7 +49,7 @@ export interface DbTrade {
   dryRun:         boolean;
 }
 
-const insertStmt = db.prepare<Omit<DbTrade, 'id'> & { dryRun: 0 | 1 }>(`
+const insertStmt = db.prepare<Omit<DbTrade, 'id' | 'dryRun'> & { dryRun: 0 | 1 }>(`
   INSERT OR IGNORE INTO trades
     (tokenMint, entryTimestamp, closeTimestamp, closeReason, inputSol, outputTokens,
      entryPriceSol, pnlPercent, pnlSol, durationMs, dryRun)
