@@ -112,7 +112,9 @@ export default function SettingsPage() {
   function updateField(key: string, value: string) {
     setValues((prev) => ({ ...prev, [key]: value }));
     setSaveState((prev) => ({ ...prev, [key]: 'idle' }));
-    setSaveErrors((prev) => ({ ...prev, [key]: '' }));
+    // Live validatie: toon fout direct terwijl gebruiker typt
+    const err = validateField(key, value);
+    setSaveErrors((prev) => ({ ...prev, [key]: err ?? '' }));
   }
 
   // ── Sla één veld op ─────────────────────────────────────────────────────────
