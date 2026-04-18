@@ -9,6 +9,7 @@
 import { config } from './config';
 import { logger } from './logger';
 import { eventBus } from './event-bus';
+import { WSOL_MINT } from './constants';
 import type { Swapper } from './swapper';
 
 export interface Position {
