@@ -22,9 +22,10 @@ import { config } from './config';
 import { logger } from './logger';
 import type { PoolInfo } from './listener';
 
-// ── Constanten ────────────────────────────────────────────────────────────────
+import { WSOL_MINT } from './constants';
+export { WSOL_MINT };
 
-export const WSOL_MINT = 'So11111111111111111111111111111111111111112';
+// ── Constanten ────────────────────────────────────────────────────────────────
 
 // Klein simulatie-bedrag voor honeypot-check (0.001 SOL in lamports)
 const SIM_LAMPORTS = Math.floor(config.filter.honeypotSimAmountSol * LAMPORTS_PER_SOL);
