@@ -25,8 +25,6 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const WSOL_MINT = 'So11111111111111111111111111111111111111112';
-
 /**
  * Haal de huidige marktprijs op van een token in SOL via Jupiter Price API v2.
  * Retourneert 0 als de prijs niet opgehaald kan worden (geen blocker voor de swap).
