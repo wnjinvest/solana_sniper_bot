@@ -233,7 +233,7 @@ describe('PoolFilter — 7 filterlagen', () => {
       mockDeployerOk();
       mockJupiterSuccess();
       const result = await filter.evaluate(makePool({ openTime: 0 }));
-      expect(result.reason).not.toMatch(/opent pas/i);
+      expect(result.reason ?? '').not.toMatch(/opent pas/i);
     });
 
     it('accepteert pool die binnenkort opent (2 min < max 5 min)', async () => {
@@ -241,7 +241,7 @@ describe('PoolFilter — 7 filterlagen', () => {
       mockJupiterSuccess();
       const openTime = Math.floor((Date.now() + 120_000) / 1000); // +2 min
       const result = await filter.evaluate(makePool({ openTime }));
-      expect(result.reason).not.toMatch(/opent pas/i);
+      expect(result.reason ?? '').not.toMatch(/opent pas/i);
     });
   });
 
