@@ -144,7 +144,18 @@ export class PoolFilter {
 
     // ── Check 7: Honeypot simulatie ───────────────────────────────────────────
     if (config.filter.honeypotCheckEnabled) {
-      const honeypotCheck = await this.checkHoneypot(tokenMint);
+      const honeypotCheck = await Promise.race([
+        this.checkHoneypot(tokenMint),
+        new Promise<{ passed: false; reason: string }>((resolve) =>
+          setTimeout(
+            () => resolve({
+              passed: false,
+              reason: `SKIP: honeypot check timeout (>${HONEYPOT_CHECK_TIMEOUT_MS}ms) — pool afgewezen`,
+            }),
+            HONEYPOT_CHECK_TIMEOUT_MS
+          )
+        ),
+      ]);
       if (!honeypotCheck.passed) {
         return skip(honeypotCheck.reason!, tokenMint, liquiditySol);
       }
