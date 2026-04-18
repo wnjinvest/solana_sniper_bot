@@ -37,7 +37,7 @@ npm install --legacy-peer-deps   # altijd --legacy-peer-deps
 ```
 
 ### API routes
-- `app/api/settings/route.ts` — GET leest `/opt/claude/stb/.env`, POST schrijft terug
+- `app/api/settings/route.ts` — GET leest `/opt/claude/solana-sniper-bot/bot/.env`, POST schrijft terug
 - Key validatie: `/^[A-Z0-9_]+$/`
 
 ## TypeScript check
