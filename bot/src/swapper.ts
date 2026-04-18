@@ -22,11 +22,10 @@ import {
 } from '@solana/web3.js';
 import { config } from './config';
 import { logger } from './logger';
+import { WSOL_MINT } from './constants';
 import type { WalletManager } from './wallet';
 
 // ── Constanten ────────────────────────────────────────────────────────────────
-
-const WSOL_MINT = 'So11111111111111111111111111111111111111112';
 
 /** Timeout voor Jupiter API-calls (ms) */
 const JUPITER_API_TIMEOUT_MS = 5_000;
