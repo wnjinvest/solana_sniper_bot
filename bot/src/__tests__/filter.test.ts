@@ -185,7 +185,7 @@ describe('PoolFilter — 7 filterlagen', () => {
       const result = await filter.evaluate(makePool({
         initPcAmountLamports: BigInt(5 * 1_000_000_000),
       }));
-      expect(result.reason).not.toMatch(/liquiditeit/i);
+      expect(result.reason ?? '').not.toMatch(/liquiditeit/i);
     });
 
     it('accepteert pool met ruim voldoende liquiditeit (50 SOL)', async () => {
@@ -194,7 +194,7 @@ describe('PoolFilter — 7 filterlagen', () => {
       const result = await filter.evaluate(makePool({
         initPcAmountLamports: BigInt(50 * 1_000_000_000),
       }));
-      expect(result.reason).not.toMatch(/liquiditeit/i);
+      expect(result.reason ?? '').not.toMatch(/liquiditeit/i);
     });
   });
 
