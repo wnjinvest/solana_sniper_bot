@@ -8,7 +8,7 @@
  *  4. Events van alle modules via event-bus doorsturen naar dashboard
  */
 
-import { config }           from './config';
+import { config, reloadConfig } from './config';
 import { logger }           from './logger';
 import { RaydiumListener }  from './listener';
 import { PoolFilter }       from './filter';
