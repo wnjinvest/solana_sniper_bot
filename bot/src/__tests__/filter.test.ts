@@ -157,14 +157,14 @@ describe('PoolFilter — 7 filterlagen', () => {
       mockDeployerOk();
       mockJupiterSuccess();
       const result = await filter.evaluate(makePool({ pcMint: WSOL_MINT }));
-      expect(result.reason).not.toMatch(/SOL-pair/i);
+      expect(result.reason ?? '').not.toMatch(/SOL-pair/i);
     });
 
     it('accepteert pool waar WSOL de coinMint is', async () => {
       mockDeployerOk();
       mockJupiterSuccess();
       const result = await filter.evaluate(makePool({ coinMint: WSOL_MINT, pcMint: TOKEN_MINT }));
-      expect(result.reason).not.toMatch(/SOL-pair/i);
+      expect(result.reason ?? '').not.toMatch(/SOL-pair/i);
     });
   });
 
