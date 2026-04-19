@@ -246,8 +246,8 @@ async function main(): Promise<void> {
   const shutdown = (signal: string): void => {
     logger.info(`[Main] ${signal} — afsluiten...`);
     listener?.logStats();
-    listener?.stop();
-    monitor.stop();
+    simulator?.logStats();
+    stopAll();
     socketServer.close();
     process.exit(0);
   };
