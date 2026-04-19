@@ -13,6 +13,7 @@ const links = [
 
 export function Nav() {
   const { pathname } = useLocation();
+  const { walletAddress, balanceSol } = useBotSocket();
 
   return (
     <aside className="flex h-full w-56 flex-col border-r bg-card px-3 py-4">
