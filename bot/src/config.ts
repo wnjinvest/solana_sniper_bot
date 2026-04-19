@@ -49,6 +49,10 @@ function buildConfig() {
       buyAmountSol:             parseFloat(optionalEnv('BUY_AMOUNT_SOL', '0.05')),
       slippageBps:              parseInt(optionalEnv('SLIPPAGE_BPS', '300'), 10),
       priorityFeeMicroLamports: parseInt(optionalEnv('PRIORITY_FEE_MICRO_LAMPORTS', '100000'), 10),
+      // 'auto' = Jupiter berekent dynamisch op basis van netwerk-congestie
+      // 'fixed' = gebruik PRIORITY_FEE_MICRO_LAMPORTS (vaste waarde)
+      priorityFeeMode:          optionalEnv('PRIORITY_FEE_MODE', 'auto') as 'auto' | 'fixed',
+      priorityFeeAutoMultiplier: parseFloat(optionalEnv('PRIORITY_FEE_AUTO_MULTIPLIER', '2')),
       maxRetries:               parseInt(optionalEnv('SWAP_MAX_RETRIES', '3'), 10),
       retryDelayMs:             parseInt(optionalEnv('SWAP_RETRY_DELAY_MS', '500'), 10),
     },
