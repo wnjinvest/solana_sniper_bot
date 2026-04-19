@@ -78,7 +78,7 @@ const MAX_RECONNECT_ATTEMPTS = 25;
 
 // getTransaction retry
 const TX_FETCH_MAX_RETRIES = 6;
-const TX_FETCH_RETRY_MS    = 500;
+const TX_FETCH_RETRY_MS    = 200;
 
 // Deduplicatie
 /** Max signatures in het dedup-venster */
