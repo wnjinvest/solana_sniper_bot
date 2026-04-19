@@ -180,6 +180,84 @@ export default function SettingsPage() {
         </Button>
       </div>
 
+      {/* Modus-kaart */}
+      <Card className={cn('border-2', dryRun ? 'border-yellow-500/40' : 'border-emerald-500/40')}>
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-base">Bot Modus</CardTitle>
+              <CardDescription>Wissel tussen gesimuleerde en echte trades</CardDescription>
+            </div>
+            <div className={cn('flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold',
+              dryRun
+                ? 'bg-yellow-500/15 text-yellow-500 border border-yellow-500/30'
+                : 'bg-emerald-500/15 text-emerald-500 border border-emerald-500/30'
+            )}>
+              {dryRun
+                ? <><FlaskConical className="h-3 w-3" /> DRY RUN</>
+                : <><Zap className="h-3 w-3" /> LIVE</>}
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => { setConfirmLive(false); setMode(false); }}
+              className={cn(
+                'flex flex-col items-center gap-2 rounded-lg border-2 p-4 text-sm transition-all',
+                dryRun
+                  ? 'border-yellow-500 bg-yellow-500/10 text-yellow-500'
+                  : 'border-muted bg-muted/20 text-muted-foreground hover:border-muted-foreground'
+              )}
+            >
+              <FlaskConical className="h-5 w-5" />
+              <span className="font-semibold">DRY RUN</span>
+              <span className="text-xs text-center opacity-75">Geen echte transacties — veilig testen</span>
+            </button>
+            <button
+              onClick={() => dryRun ? setConfirmLive(true) : null}
+              className={cn(
+                'flex flex-col items-center gap-2 rounded-lg border-2 p-4 text-sm transition-all',
+                !dryRun
+                  ? 'border-emerald-500 bg-emerald-500/10 text-emerald-500'
+                  : 'border-muted bg-muted/20 text-muted-foreground hover:border-muted-foreground'
+              )}
+            >
+              <Zap className="h-5 w-5" />
+              <span className="font-semibold">LIVE</span>
+              <span className="text-xs text-center opacity-75">Echte transacties met echte SOL</span>
+            </button>
+          </div>
+
+          {confirmLive && (
+            <div className="rounded-md border border-red-500/40 bg-red-500/10 p-3 space-y-3">
+              <div className="flex items-start gap-2 text-xs text-red-400">
+                <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                <span>
+                  Je schakelt over naar <strong>LIVE modus</strong>. De bot zal echte SOL gebruiken voor transacties.
+                  Zorg dat je wallet voldoende SOL heeft en alle instellingen correct zijn.
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" variant="destructive" className="h-7 text-xs" onClick={() => setMode(true)}>
+                  Bevestigen — schakel naar LIVE
+                </Button>
+                <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setConfirmLive(false)}>
+                  Annuleren
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {!dryRun && (
+            <div className="flex items-center gap-2 rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-400">
+              <Zap className="h-3.5 w-3.5 shrink-0" />
+              Bot draait in LIVE modus — transacties worden uitgevoerd met echte SOL.
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {CONFIG_GROUPS.map((group) => (
         <Card key={group.title}>
           <CardHeader>
