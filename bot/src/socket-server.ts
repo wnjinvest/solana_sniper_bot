@@ -112,13 +112,12 @@ export class BotSocketServer {
       });
 
       socket.on('start_bot', (data) => {
-        logger.info(`[Socket] start_bot ontvangen (dryRun=${data?.dryRun})`);
+        logger.info(`[Socket] start_bot ontvangen (dryRun=${data?.dryRun}, demoSpeed=${data?.demoSpeed})`);
         _isRunning = true;
         _startTime = Date.now();
         _isDryRun  = data?.dryRun ?? false;
-        // Broadcast de nieuwe DRY_RUN status naar alle clients
         this.io.emit('dry_run_status', { timestamp: Date.now(), dryRun: _isDryRun });
-        this.onStart(data?.dryRun);
+        this.onStart(data?.dryRun, data?.demoSpeed);
       });
 
       socket.on('stop_bot', () => {
