@@ -45,7 +45,7 @@ export interface BotState {
 }
 
 export interface BotActions {
-  startBot:  (dryRun?: boolean) => void;
+  startBot:  (dryRun?: boolean, demoSpeed?: number) => void;
   stopBot:   () => void;
 }
 
