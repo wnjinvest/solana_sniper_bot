@@ -144,6 +144,18 @@ export class BotSocketServer {
         // broadcastStatus (met volledige stats) wordt elke 5s vanuit index.ts gestuurd
       });
 
+      socket.on('get_config', () => {
+        const keys = [
+          'BUY_AMOUNT_SOL', 'SLIPPAGE_BPS', 'PRIORITY_FEE_MICRO_LAMPORTS',
+          'TAKE_PROFIT_PERCENT', 'STOP_LOSS_PERCENT', 'MONITOR_INTERVAL_MS',
+          'MIN_LIQUIDITY_SOL', 'MAX_TOKEN_AGE_MS', 'MIN_DEPLOYER_TX_COUNT',
+          'HONEYPOT_MAX_LOSS_PCT', 'HONEYPOT_CHECK_ENABLED',
+        ];
+        const cfg: Record<string, string> = {};
+        for (const k of keys) if (process.env[k] !== undefined) cfg[k] = process.env[k]!;
+        socket.emit('config_data', cfg);
+      });
+
       socket.on('disconnect', () => {
         logger.info(`[Socket] Dashboard verbroken: ${socket.id}`);
       });
