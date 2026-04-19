@@ -1,7 +1,8 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Activity, FlaskConical, BarChart3, Settings, Zap } from 'lucide-react';
+import { Activity, FlaskConical, BarChart3, Settings, Zap, Wallet } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from './theme-toggle';
+import { useBotSocket } from '@/hooks/use-bot-socket';
 
 const links = [
   { href: '/live',     label: 'Live',         icon: Activity     },
