@@ -125,7 +125,8 @@ async function main(): Promise<void> {
       process.env[key] = value;
       reloadConfig();
       logger.info(`[Main] Config bijgewerkt: ${key}=${value}`);
-    }
+    },
+    wallet.publicKey.toBase58(),
   );
 
   socketServer.listen();
