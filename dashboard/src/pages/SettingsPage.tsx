@@ -149,6 +149,11 @@ export default function SettingsPage() {
     setTimeout(() => setWalletSaveState('idle'), 3000);
   }
 
+  function setMode(live: boolean) {
+    getSocket().emit('update_config', { key: 'DRY_RUN', value: live ? 'false' : 'true' });
+    setConfirmLive(false);
+  }
+
   function addToBlacklist() {
     if (!newAddress.trim()) return;
     setBlacklist((prev) => [...prev, { address: newAddress.trim(), reason: newReason.trim() || 'Handmatig toegevoegd' }]);
