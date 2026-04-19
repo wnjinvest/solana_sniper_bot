@@ -48,9 +48,22 @@ export function Nav() {
         })}
       </nav>
 
-      <div className="mt-auto flex items-center justify-between px-2 pt-4">
-        <span className="text-xs text-muted-foreground">Thema</span>
-        <ThemeToggle />
+      <div className="mt-auto space-y-3 pt-4">
+        {walletAddress && (
+          <Link to="/settings" className="flex items-center gap-2 rounded-md px-2 py-2 hover:bg-accent transition-colors">
+            <Wallet className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+            <div className="min-w-0">
+              <p className="font-mono text-[10px] text-muted-foreground truncate">
+                {walletAddress.slice(0, 4)}…{walletAddress.slice(-4)}
+              </p>
+              <p className="text-xs font-semibold">{balanceSol.toFixed(4)} SOL</p>
+            </div>
+          </Link>
+        )}
+        <div className="flex items-center justify-between px-2">
+          <span className="text-xs text-muted-foreground">Thema</span>
+          <ThemeToggle />
+        </div>
       </div>
     </aside>
   );
