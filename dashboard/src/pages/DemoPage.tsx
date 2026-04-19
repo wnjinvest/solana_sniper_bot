@@ -36,7 +36,7 @@ export default function DemoPage() {
     s.emit('update_config', { key: 'MIN_DEPLOYER_TX_COUNT',value: String(deployerTxCount) });
     s.emit('update_config', { key: 'TAKE_PROFIT_PERCENT',  value: String(takeProfit) });
     s.emit('update_config', { key: 'STOP_LOSS_PERCENT',    value: String(stopLoss) });
-    startBot(true);
+    startBot(true, parseInt(speed));
   }
 
   return (
