@@ -22,11 +22,12 @@ const PRICE_POLL_MS   = 10_000;
 const WSOL_MINT       = 'So11111111111111111111111111111111111111112';
 
 export interface BotState {
-  connected:   boolean;
-  botStatus:   BotStatus;
-  botUptime:   number;
-  dryRun:      boolean;
-  balanceSol:  number;
+  connected:     boolean;
+  botStatus:     BotStatus;
+  botUptime:     number;
+  dryRun:        boolean;
+  balanceSol:    number;
+  walletAddress: string;
   stats: {
     txSeen:         number;
     init2Found:     number;
