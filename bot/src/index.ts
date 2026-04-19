@@ -103,6 +103,7 @@ async function main(): Promise<void> {
 
   const socketServer = new BotSocketServer(
     // start_bot callback
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (dryRun, demoSpeed) => {
       stopAll();
       if (demoSpeed && demoSpeed > 0) {
