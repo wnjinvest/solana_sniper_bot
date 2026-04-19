@@ -217,6 +217,9 @@ export function useBotSocket(): BotState & BotActions {
     const onDryRunStatus = (data: DryRunStatusEvent) =>
       setState((prev) => ({ ...prev, dryRun: data.dryRun }));
 
+    const onWalletInfo = (data: { address: string }) =>
+      setState((prev) => ({ ...prev, walletAddress: data.address }));
+
     s.on('connect',        onConnect);
     s.on('disconnect',     onDisconnect);
     s.on('bot_status',     onBotStatus);
