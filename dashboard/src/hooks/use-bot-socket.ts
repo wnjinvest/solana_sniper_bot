@@ -247,8 +247,8 @@ export function useBotSocket(): BotState & BotActions {
     };
   }, []);
 
-  const startBot = useCallback((dryRun?: boolean) => {
-    socketRef.current.emit('start_bot', { dryRun });
+  const startBot = useCallback((dryRun?: boolean, demoSpeed?: number) => {
+    socketRef.current.emit('start_bot', { dryRun, demoSpeed });
   }, []);
 
   const stopBot = useCallback(() => {
