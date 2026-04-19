@@ -156,6 +156,8 @@ export class BotSocketServer {
         ];
         const cfg: Record<string, string> = {};
         for (const k of keys) if (process.env[k] !== undefined) cfg[k] = process.env[k]!;
+        // Stuur publiek adres mee (veilig) — private key NOOIT
+        if (this.walletAddress) cfg['WALLET_ADDRESS'] = this.walletAddress;
         socket.emit('config_data', cfg);
       });
 
