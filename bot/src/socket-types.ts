@@ -106,7 +106,9 @@ export interface BotStatusEvent {
 // ── Dashboard → Bot ───────────────────────────────────────────────────────────
 
 export interface StartBotEvent {
-  dryRun?: boolean;
+  dryRun?:    boolean;
+  /** Demo-simulatie snelheid: 1 | 5 | 10. Indien ingesteld wordt DemoSimulator gebruikt i.p.v. RaydiumListener. */
+  demoSpeed?: number;
 }
 
 export interface UpdateConfigEvent {
