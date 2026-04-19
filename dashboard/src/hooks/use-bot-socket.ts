@@ -231,6 +231,7 @@ export function useBotSocket(): BotState & BotActions {
     s.on('trade_closed',   onTradeClosed);
     s.on('credit_stats',   onCreditStats);
     s.on('dry_run_status', onDryRunStatus);
+    s.on('wallet_info',    onWalletInfo);
 
     if (s.connected) {
       setState((prev) => ({ ...prev, connected: true }));
