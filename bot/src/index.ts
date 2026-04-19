@@ -140,13 +140,14 @@ async function main(): Promise<void> {
 
   // ── Status periodiek broadcasten ────────────────────────────────────────────
   setInterval(() => {
-    socketServer.broadcastStatus(listener?.stats ?? {
-      txSeen: 0, init2Found: 0, parsedOk: 0, parseErrors: 0, duplicates: 0,
-    });
+    socketServer.broadcastStatus(
+      listener?.stats ?? simulator?.stats ?? {
+        txSeen: 0, init2Found: 0, parsedOk: 0, parseErrors: 0, duplicates: 0,
+      }
+    );
   }, 5_000);
 
-  // ── Statistieken elke 5 minuten loggen ─────────────────────────────────────
-  setInterval(() => listener?.logStats(), 5 * 60_000);
+  setInterval(() => { listener?.logStats(); simulator?.logStats(); }, 5 * 60_000);
 
   // ── Pool-detectie callback ─────────────────────────────────────────────────
   const onPoolDetected = async (pool: PoolInfo): Promise<void> => {
