@@ -15,7 +15,8 @@ let socket: BotSocket | null = null;
 
 export function getSocket(): BotSocket {
   if (!socket) {
-    socket = io('http://localhost:3001', {
+    const host = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+    socket = io(`http://${host}:3001`, {
       reconnectionAttempts: 20,
       reconnectionDelay:    1_000,
       reconnectionDelayMax: 10_000,
