@@ -43,9 +43,10 @@ export class BotSocketServer {
   private readonly httpServer: ReturnType<typeof createServer>;
 
   constructor(
-    private readonly onStart:  StartCallback,
-    private readonly onStop:   StopCallback,
-    private readonly onConfig: ConfigCallback,
+    private readonly onStart:        StartCallback,
+    private readonly onStop:         StopCallback,
+    private readonly onConfig:       ConfigCallback,
+    private readonly walletAddress:  string = '',
   ) {
     this.httpServer = createServer(
       (_req: IncomingMessage, res: ServerResponse) => {
