@@ -92,14 +92,23 @@ async function main(): Promise<void> {
   }
 
   // ── Socket.io server ────────────────────────────────────────────────────────
-  let listener: RaydiumListener | null = null;
+  let listener:  RaydiumListener | null = null;
+  let simulator: DemoSimulator   | null = null;
+
+  function stopAll(): void {
+    listener?.stop();  listener  = null;
+    simulator?.stop(); simulator = null;
+    monitor.stop();
+  }
 
   const socketServer = new BotSocketServer(
     // start_bot callback
-    (dryRun) => {
-      if (listener) {
-        logger.info(`[Main] Bot herstart via dashboard (dryRun=${dryRun})`);
-        listener.restart();
+    (dryRun, demoSpeed) => {
+      stopAll();
+      if (demoSpeed && demoSpeed > 0) {
+        logger.info(`[Main] Demo-simulator gestart (${demoSpeed}x snelheid, dryRun=true)`);
+        simulator = new DemoSimulator(demoSpeed);
+        simulator.start();
       } else {
         logger.info(`[Main] Bot gestart via dashboard (dryRun=${dryRun})`);
         listener = new RaydiumListener(onPoolDetected);
@@ -108,9 +117,7 @@ async function main(): Promise<void> {
     },
     // stop_bot callback
     () => {
-      listener?.stop();
-      listener = null;
-      monitor.stop();
+      stopAll();
       logger.info('[Main] Bot gestopt via dashboard.');
     },
     // update_config callback
