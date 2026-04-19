@@ -94,7 +94,7 @@ export interface BotStatusEvent {
   };
 }
 
-export interface StartBotEvent    { dryRun?: boolean; }
+export interface StartBotEvent    { dryRun?: boolean; demoSpeed?: number; }
 export interface UpdateConfigEvent { key: string; value: string; }
 
 export interface ServerToClientEvents {
