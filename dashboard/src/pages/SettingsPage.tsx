@@ -254,6 +254,83 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
+      {/* Wallet */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <Wallet className="h-4 w-4" /> Wallet Configuratie
+          </CardTitle>
+          <CardDescription>Trading wallet — privé sleutel wordt nooit weergegeven na opslaan</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Huidig wallet adres */}
+          {walletAddress ? (
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Actief wallet adres</Label>
+              <div className="flex items-center gap-2 rounded-md border bg-muted/30 px-3 py-2">
+                <p className="font-mono text-xs flex-1 break-all">{walletAddress}</p>
+                <span className="shrink-0 text-xs text-muted-foreground">{balanceSol.toFixed(4)} SOL</span>
+              </div>
+              <p className="text-xs text-muted-foreground">Dit is het publieke adres — veilig om te tonen.</p>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">Geen wallet geconfigureerd — voer een privé sleutel in.</p>
+          )}
+
+          <Separator />
+
+          {/* Waarschuwing */}
+          <div className="flex items-start gap-2 rounded-md border border-yellow-500/30 bg-yellow-500/10 px-3 py-2 text-xs text-yellow-500">
+            <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+            <span>
+              Gebruik uitsluitend een <strong>dedicated trading wallet</strong> — nooit je hoofdwallet.
+              Zet enkel het bedrag op deze wallet dat je bereid bent te verliezen.
+            </span>
+          </div>
+
+          {/* Private key invoer */}
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground">Nieuwe privé sleutel (base58)</Label>
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Input
+                  type={showPrivateKey ? 'text' : 'password'}
+                  placeholder="Plak hier je Solflare base58 privé sleutel..."
+                  value={privateKey}
+                  onChange={(e) => setPrivateKey(e.target.value)}
+                  className="h-8 text-xs font-mono pr-9"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPrivateKey((v) => !v)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPrivateKey ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                </button>
+              </div>
+              <Button
+                size="sm"
+                onClick={savePrivateKey}
+                disabled={!privateKey.trim() || walletSaveState === 'saving'}
+                className={cn('h-8 shrink-0', walletSaveState === 'ok' && 'text-green-500', walletSaveState === 'error' && 'border-red-500 text-red-500')}
+                variant={walletSaveState === 'ok' ? 'secondary' : 'default'}
+              >
+                {walletSaveState === 'saving' ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  : walletSaveState === 'ok' ? '✓ Opgeslagen'
+                  : walletSaveState === 'error' ? '✕ Ongeldig formaat'
+                  : <><Save className="mr-1.5 h-3.5 w-3.5" /> Opslaan</>}
+              </Button>
+            </div>
+            {walletSaveState === 'ok' && (
+              <p className="text-xs text-green-500">Herstart de bot via Bot Beheer om de nieuwe wallet te activeren.</p>
+            )}
+            {walletSaveState === 'error' && (
+              <p className="text-xs text-red-500">Ongeldige sleutel — verwacht een base58 string van 87–88 tekens.</p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader><CardTitle className="text-base">Bot Beheer</CardTitle></CardHeader>
         <CardContent>
