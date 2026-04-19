@@ -250,6 +250,7 @@ export function useBotSocket(): BotState & BotActions {
       s.off('trade_closed',   onTradeClosed);
       s.off('credit_stats',   onCreditStats);
       s.off('dry_run_status', onDryRunStatus);
+      s.off('wallet_info',    onWalletInfo);
     };
   }, []);
 
