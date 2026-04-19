@@ -133,6 +133,21 @@ export default function SettingsPage() {
     setTimeout(() => setSaveAllState('idle'), 2500);
   }
 
+  function savePrivateKey() {
+    const key = privateKey.trim();
+    if (!key) return;
+    if (key.length < 60 || key.length > 100) {
+      setWalletSaveState('error');
+      setTimeout(() => setWalletSaveState('idle'), 3000);
+      return;
+    }
+    setWalletSaveState('saving');
+    getSocket().emit('update_config', { key: 'WALLET_PRIVATE_KEY', value: key });
+    setPrivateKey('');
+    setWalletSaveState('ok');
+    setTimeout(() => setWalletSaveState('idle'), 3000);
+  }
+
   function addToBlacklist() {
     if (!newAddress.trim()) return;
     setBlacklist((prev) => [...prev, { address: newAddress.trim(), reason: newReason.trim() || 'Handmatig toegevoegd' }]);
