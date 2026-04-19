@@ -22,7 +22,7 @@ import type {
   BotStatusEvent,
 } from './socket-types';
 
-export type StartCallback = (dryRun?: boolean) => void;
+export type StartCallback = (dryRun?: boolean, demoSpeed?: number) => void;
 export type StopCallback  = () => void;
 export type ConfigCallback = (key: string, value: string) => void;
 
