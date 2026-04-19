@@ -68,6 +68,8 @@ function validateField(key: string, value: string): string | null {
 type SaveState = 'idle' | 'saving' | 'ok' | 'error';
 
 export default function SettingsPage() {
+  const { walletAddress, balanceSol } = useBotSocket();
+
   const [values,       setValues]       = useState<Record<string, string>>({});
   const [saveState,    setSaveState]    = useState<Record<string, SaveState>>({});
   const [saveErrors,   setSaveErrors]   = useState<Record<string, string>>({});
@@ -76,6 +78,11 @@ export default function SettingsPage() {
   const [newAddress,   setNewAddress]   = useState('');
   const [newReason,    setNewReason]    = useState('');
   const [blacklist,    setBlacklist]    = useState<Array<{ address: string; reason: string }>>([]);
+
+  // Wallet private key invoer
+  const [privateKey,     setPrivateKey]     = useState('');
+  const [showPrivateKey, setShowPrivateKey] = useState(false);
+  const [walletSaveState, setWalletSaveState] = useState<SaveState>('idle');
 
   // Laad config via socket get_config
   useEffect(() => {
