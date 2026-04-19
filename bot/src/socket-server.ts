@@ -104,8 +104,10 @@ export class BotSocketServer {
     this.io.on('connection', (socket) => {
       logger.info(`[Socket] Dashboard verbonden: ${socket.id}`);
 
-      // Stuur direct de DRY_RUN status naar de nieuw verbonden client
       socket.emit('dry_run_status', { timestamp: Date.now(), dryRun: _isDryRun });
+      if (this.walletAddress) {
+        socket.emit('wallet_info', { address: this.walletAddress });
+      }
 
       eventBus.emit('bot_log', {
         timestamp: Date.now(),
