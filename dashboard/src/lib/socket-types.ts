@@ -97,6 +97,8 @@ export interface BotStatusEvent {
 export interface StartBotEvent    { dryRun?: boolean; demoSpeed?: number; }
 export interface UpdateConfigEvent { key: string; value: string; }
 
+export interface WalletInfoEvent { address: string; }
+
 export interface ServerToClientEvents {
   pool_detected:  (data: PoolDetectedEvent)  => void;
   pool_filtered:  (data: PoolFilteredEvent)  => void;
@@ -108,6 +110,7 @@ export interface ServerToClientEvents {
   credit_stats:   (data: CreditStatsEvent)   => void;
   dry_run_status: (data: DryRunStatusEvent)  => void;
   config_data:    (data: Record<string, string>) => void;
+  wallet_info:    (data: WalletInfoEvent)    => void;
 }
 
 export interface ClientToServerEvents {
