@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Save, RefreshCw, Trash2, Plus, Loader2 } from 'lucide-react';
+import { Save, RefreshCw, Trash2, Plus, Loader2, Eye, EyeOff, AlertTriangle, Wallet } from 'lucide-react';
 import { getSocket } from '@/lib/socket';
+import { useBotSocket } from '@/hooks/use-bot-socket';
 import { cn } from '@/lib/utils';
 
 const CONFIG_GROUPS = [
