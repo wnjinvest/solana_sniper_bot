@@ -455,12 +455,13 @@ export class Swapper {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            quoteResponse:               quote,
-            userPublicKey:               this.wallet.publicKey.toBase58(),
-            wrapAndUnwrapSol:            true,
-            dynamicComputeUnitLimit:     true,
-            // prioritizationFeeLamports is in microlamports
-            prioritizationFeeLamports:   config.swap.priorityFeeMicroLamports,
+            quoteResponse:             quote,
+            userPublicKey:             this.wallet.publicKey.toBase58(),
+            wrapAndUnwrapSol:          true,
+            dynamicComputeUnitLimit:   true,
+            prioritizationFeeLamports: config.swap.priorityFeeMode === 'auto'
+              ? { autoMultiplier: config.swap.priorityFeeAutoMultiplier }
+              : config.swap.priorityFeeMicroLamports,
           }),
         },
         JUPITER_API_TIMEOUT_MS
