@@ -56,11 +56,12 @@ const initialFilterCounts: Record<FilterCategory, number> = {
 };
 
 const initialState: BotState = {
-  connected:    false,
-  botStatus:    'stopped',
-  botUptime:    0,
-  dryRun:       false,
-  balanceSol:   0,
+  connected:     false,
+  botStatus:     'stopped',
+  botUptime:     0,
+  dryRun:        false,
+  balanceSol:    0,
+  walletAddress: '',
   stats: {
     txSeen: 0, init2Found: 0, parsedOk: 0,
     poolsFiltered: 0, tradesExecuted: 0, tradesClosed: 0,
