@@ -229,7 +229,7 @@ export class RaydiumListener {
       method:  'logsSubscribe',
       params: [
         { mentions: [this.programId] },
-        { commitment: 'confirmed' },
+        { commitment: 'processed' },
       ],
     }));
 
