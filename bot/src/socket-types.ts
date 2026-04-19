@@ -133,6 +133,7 @@ export interface ServerToClientEvents {
   credit_stats:    (data: CreditStatsEvent)   => void;
   dry_run_status:  (data: DryRunStatusEvent)  => void;
   config_data:     (data: Record<string, string>) => void;
+  wallet_info:     (data: WalletInfoEvent)   => void;
 }
 
 export interface ClientToServerEvents {
