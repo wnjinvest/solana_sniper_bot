@@ -68,7 +68,8 @@ function validateField(key: string, value: string): string | null {
 type SaveState = 'idle' | 'saving' | 'ok' | 'error';
 
 export default function SettingsPage() {
-  const { walletAddress, balanceSol } = useBotSocket();
+  const { walletAddress, balanceSol, dryRun } = useBotSocket();
+  const [confirmLive, setConfirmLive] = useState(false);
 
   const [values,       setValues]       = useState<Record<string, string>>({});
   const [saveState,    setSaveState]    = useState<Record<string, SaveState>>({});
