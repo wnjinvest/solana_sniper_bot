@@ -126,6 +126,7 @@ export interface ServerToClientEvents {
   bot_status:     (data: BotStatusEvent)     => void;
   credit_stats:    (data: CreditStatsEvent)   => void;
   dry_run_status:  (data: DryRunStatusEvent)  => void;
+  config_data:     (data: Record<string, string>) => void;
 }
 
 export interface ClientToServerEvents {
@@ -133,4 +134,5 @@ export interface ClientToServerEvents {
   stop_bot:       ()                        => void;
   update_config:  (data: UpdateConfigEvent) => void;
   request_status: ()                        => void;
+  get_config:     ()                        => void;
 }
