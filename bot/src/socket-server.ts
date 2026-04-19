@@ -20,6 +20,7 @@ import type {
   ServerToClientEvents,
   ClientToServerEvents,
   BotStatusEvent,
+  WalletInfoEvent,
 } from './socket-types';
 
 export type StartCallback = (dryRun?: boolean, demoSpeed?: number) => void;
