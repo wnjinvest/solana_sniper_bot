@@ -72,6 +72,10 @@ export interface DryRunStatusEvent {
   dryRun:    boolean;
 }
 
+export interface WalletInfoEvent {
+  address: string;
+}
+
 export interface CreditStatsEvent {
   timestamp:       number;
   bytesReceived:   number;
